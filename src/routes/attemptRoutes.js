@@ -1,0 +1,2 @@
+import { Router } from "express"; import { authenticate, authorize } from "../middleware/authenticate.js"; import { getAttemptResult, listAttempts, saveAnswers, submitAttempt } from "../controllers/assessmentController.js";
+const router = Router(); router.use(authenticate); router.get("/", listAttempts); router.get("/:id/result", authorize("LEARNER"), getAttemptResult); router.put("/:id/answers", authorize("LEARNER"), saveAnswers); router.post("/:id/submit", authorize("LEARNER"), submitAttempt); export default router;

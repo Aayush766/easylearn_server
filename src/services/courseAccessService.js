@@ -1,0 +1,4 @@
+import Course from "../models/Course.js";
+import AppError from "../utils/AppError.js";
+export async function assertCourseManager(user, courseId) { const course = await Course.findOne({ _id: courseId, deletedAt: null }); if (!course) throw new AppError("Course was not found.", { code: "COURSE_NOT_FOUND", statusCode: 404 }); if (["ADMIN", "SUPER_ADMIN"].includes(user.role)) return course; if (user.role === "TRAINER" && course.trainerIds.some((id) => id.equals(user._id))) return course; throw new AppError("You are not assigned to this course.", { code: "TRAINER_NOT_ASSIGNED", statusCode: 403 }); }
+export async function assertCourseVisibleToLearner(user, courseId) { const course = await Course.findOne({ _id: courseId, deletedAt: null }); if (!course || course.status !== "PUBLISHED") throw new AppError("Course was not found.", { code: "COURSE_NOT_FOUND", statusCode: 404 }); return course; }

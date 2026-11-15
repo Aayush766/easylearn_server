@@ -1,0 +1,2 @@
+import { Router } from "express"; import { authenticate, authorize } from "../middleware/authenticate.js"; import { createUser, deleteUser, listUsers, updateUser } from "../controllers/userController.js";
+const router = Router(); router.use(authenticate); router.get("/", authorize("ADMIN", "SUPER_ADMIN"), listUsers); router.post("/", authorize("ADMIN", "SUPER_ADMIN"), createUser); router.patch("/:id", updateUser); router.delete("/:id", authorize("ADMIN", "SUPER_ADMIN"), deleteUser); export default router;

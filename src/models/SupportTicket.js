@@ -1,0 +1,3 @@
+import mongoose from "mongoose";
+const ticketSchema = new mongoose.Schema({ requesterId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true }, category: { type: String, required: true, trim: true }, subject: { type: String, required: true, trim: true, maxlength: 200 }, description: { type: String, required: true, trim: true, maxlength: 5000 }, attachment: { publicId: String, url: String }, status: { type: String, enum: ["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"], default: "OPEN", index: true }, resolvedAt: Date }, { timestamps: true, versionKey: false });
+export default mongoose.model("SupportTicket", ticketSchema);
