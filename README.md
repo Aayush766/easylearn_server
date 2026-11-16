@@ -7,14 +7,14 @@ Express 5 API backed by MongoDB. The student, trainer, and admin clients use thi
 1. From the repository root, copy `.env.example` to `server/.env`.
 2. Fill in `MONGODB_URI`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, the Cloudinary values, and `SUPER_ADMIN_EMAIL` / `SUPER_ADMIN_PASSWORD`.
 3. Use separate random JWT secrets with at least 32 characters. The initial super-admin password must have at least 12 characters.
-4. Keep `CLIENT_URL` aligned with the frontend origins. Local development defaults are `http://localhost:5173` and `http://localhost:5174`.
+4. Keep `CLIENT_URL` aligned with the frontend origins. Local development defaults are `http://localhost:5173` and `http://localhost:5174`. The production Netlify app at `https://easylearnlms.netlify.app` is also allowed by the API.
 5. In this directory, run `npm ci` and `npm run dev`.
 
 The first super-admin is created only if no super-admin account exists. If one already exists, changing `SUPER_ADMIN_EMAIL` or `SUPER_ADMIN_PASSWORD` will not replace it; use the authenticated account management flow instead.
 
 ## Production configuration
 
-Set `NODE_ENV=production`, `PORT`, `MONGODB_URI`, both JWT secrets, all Cloudinary credentials, `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_PASSWORD`, and the production `CLIENT_URL` origins in the hosting platform's secret manager. Production startup rejects missing provider credentials, short JWT secrets, weak initial super-admin passwords, and non-HTTPS client origins. Set `COOKIE_SAME_SITE` to match the deployment topology; cross-site frontend/API deployments require `none` and HTTPS.
+Set `NODE_ENV=production`, `PORT`, `MONGODB_URI`, both JWT secrets, all Cloudinary credentials, `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_PASSWORD`, and any additional production `CLIENT_URL` origins in the hosting platform's secret manager. Production startup rejects missing provider credentials, short JWT secrets, weak initial super-admin passwords, and non-HTTPS client origins. Production defaults refresh cookies to `SameSite=None; Secure` for the cross-site Netlify and Render deployment; `COOKIE_SAME_SITE` can override this when needed.
 
 Deploy with `npm ci --omit=dev` followed by `npm start`. Terminate TLS at a trusted reverse proxy and restrict database network access to the application. Back up MongoDB and verify a restore before launch. Do not commit `.env` files.
 

@@ -4,7 +4,10 @@ dotenv.config({ path: process.env.NODE_ENV === "test" ? ".env.test" : ".env" });
 
 const parseOrigins = (value) => value.split(",").map((origin) => origin.trim()).filter(Boolean);
 const nodeEnv = process.env.NODE_ENV || "development";
-const clientOrigins = parseOrigins(process.env.CLIENT_URL || "http://localhost:5173");
+const productionClientOrigins = ["https://easylearnlms.netlify.app"];
+const configuredClientOrigins = parseOrigins(process.env.CLIENT_URL || (nodeEnv === "production" ? "" : "http://localhost:5173,http://localhost:5174"))
+  .map((origin) => origin.replace(/\/+$/, ""));
+const clientOrigins = [...new Set([...configuredClientOrigins, ...productionClientOrigins])];
 
 if (nodeEnv === "production") {
   const required = [
@@ -32,7 +35,7 @@ export const env = Object.freeze({
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || "",
   jwtRefreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
   cookieSecure: process.env.COOKIE_SECURE === "true",
-  cookieSameSite: ["lax", "strict", "none"].includes(process.env.COOKIE_SAME_SITE) ? process.env.COOKIE_SAME_SITE : "lax",
+  cookieSameSite: ["lax", "strict", "none"].includes(process.env.COOKIE_SAME_SITE) ? process.env.COOKIE_SAME_SITE : nodeEnv === "production" ? "none" : "lax",
   cloudinary: Object.freeze({ cloudName: process.env.CLOUDINARY_CLOUD_NAME || "", apiKey: process.env.CLOUDINARY_API_KEY || "", apiSecret: process.env.CLOUDINARY_API_SECRET || "" }),
   superAdmin: Object.freeze({ name: process.env.SUPER_ADMIN_NAME || "Platform Owner", email: process.env.SUPER_ADMIN_EMAIL || "", password: process.env.SUPER_ADMIN_PASSWORD || "" }),
   cloudflareStream: Object.freeze({ accountId: process.env.CLOUDFLARE_ACCOUNT_ID || "", token: process.env.CLOUDFLARE_STREAM_TOKEN || "", customerCode: process.env.CLOUDFLARE_STREAM_CUSTOMER_CODE || "" }),
