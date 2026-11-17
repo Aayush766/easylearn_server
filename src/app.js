@@ -17,6 +17,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import certificateRoutes from "./routes/certificateRoutes.js";
 import landingRoutes from "./routes/landingRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import attendanceRoutes from "./routes/attendanceRoutes.js";
 import { rateLimit } from "./middleware/rateLimit.js";
 
 const app = express();
@@ -33,6 +34,7 @@ app.use("/api/uploads", uploadRoutes);
 app.use("/api/certificates", certificateRoutes);
 app.use("/api/auth", rateLimit({ max: 10, windowMs: 15 * 60 * 1000 }), authRoutes);
 app.use("/api", rateLimit());
+app.use("/api/attendance", attendanceRoutes);
 app.use("/api", courseRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/assessments", assessmentRoutes);

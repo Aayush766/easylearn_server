@@ -5,7 +5,7 @@ Express 5 API backed by MongoDB. The student, trainer, and admin clients use thi
 ## Local setup
 
 1. From the repository root, copy `.env.example` to `server/.env`.
-2. Fill in `MONGODB_URI`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, the Cloudinary values, and `SUPER_ADMIN_EMAIL` / `SUPER_ADMIN_PASSWORD`.
+2. Fill in `MONGODB_URI`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, the Cloudinary values, and `SUPER_ADMIN_EMAIL` / `SUPER_ADMIN_PASSWORD`. MongoDB is required in development and production; startup now stops immediately with a clear error if it cannot connect.
 3. Use separate random JWT secrets with at least 32 characters. The initial super-admin password must have at least 12 characters.
 4. Keep `CLIENT_URL` aligned with the frontend origins. Local development defaults are `http://localhost:5173` and `http://localhost:5174`. The production Netlify app at `https://easylearnlms.netlify.app` is also allowed by the API.
 5. In this directory, run `npm ci` and `npm run dev`.

@@ -1,6 +1,10 @@
 ﻿import dotenv from "dotenv";
 
-dotenv.config({ path: process.env.NODE_ENV === "test" ? ".env.test" : ".env" });
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const serverDirectory = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+dotenv.config({ path: resolve(serverDirectory, process.env.NODE_ENV === "test" ? ".env.test" : ".env") });
 
 const parseOrigins = (value) => value.split(",").map((origin) => origin.trim()).filter(Boolean);
 const nodeEnv = process.env.NODE_ENV || "development";

@@ -33,13 +33,17 @@ router.post("/signature", rateLimit({ max: 20, windowMs: 60_000 }), authenticate
   try {
     const { cloudName, apiKey, apiSecret } = env.cloudinary;
     if (!cloudName || !apiKey || !apiSecret) throw new AppError("Cloudinary is not configured on the server.", { code: "MEDIA_PROVIDER_NOT_CONFIGURED", statusCode: 503 });
+    const resourceType = req.body?.resourceType || "image";
+    if (!["image", "video", "raw"].includes(resourceType)) throw new AppError("Unsupported Cloudinary resource type.", { code: "VALIDATION_ERROR", statusCode: 400 });
+    const extension = String(req.body?.extension || "").toLowerCase();
+    if (resourceType === "raw" && !allowedFormats.split(",").includes(extension)) throw new AppError("Choose a supported document file type.", { code: "VALIDATION_ERROR", statusCode: 400 });
     const timestamp = Math.floor(Date.now() / 1000);
     const roleFolder = req.user.role.toLowerCase().replace(/[^a-z0-9_-]/g, "");
     const folder = `prime-easy-learn/${roleFolder}/${req.user.id}`;
-    const publicId = crypto.randomUUID();
+    const publicId = `${crypto.randomUUID()}${resourceType === "raw" ? `.${extension}` : ""}`;
     const params = `allowed_formats=${allowedFormats}&folder=${folder}&overwrite=false&public_id=${publicId}&timestamp=${timestamp}`;
     const signature = crypto.createHash("sha1").update(`${params}${apiSecret}`).digest("hex");
-    ok(res, "Upload signature created.", { cloudName, apiKey, timestamp, folder, allowedFormats, publicId, overwrite: false, signature });
+    ok(res, "Upload signature created.", { cloudName, apiKey, timestamp, folder, allowedFormats, publicId, overwrite: false, signature, resourceType });
   } catch (error) { next(error); }
 });
 export default router;
