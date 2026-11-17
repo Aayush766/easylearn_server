@@ -8,7 +8,7 @@ dotenv.config({ path: resolve(serverDirectory, process.env.NODE_ENV === "test" ?
 
 const parseOrigins = (value) => value.split(",").map((origin) => origin.trim()).filter(Boolean);
 const nodeEnv = process.env.NODE_ENV || "development";
-const productionClientOrigins = ["https://easylearnlms.netlify.app"];
+const productionClientOrigins = ["https://easylearnlms.netlify.app", "https://admineasylearn.netlify.app"];
 const configuredClientOrigins = parseOrigins(process.env.CLIENT_URL || (nodeEnv === "production" ? "" : "http://localhost:5173,http://localhost:5174"))
   .map((origin) => origin.replace(/\/+$/, ""));
 const clientOrigins = [...new Set([...configuredClientOrigins, ...productionClientOrigins])];
